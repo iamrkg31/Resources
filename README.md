@@ -1,2 +1,2 @@
 # Resources
-Compilation of useful materials, codes, docs etc
+Compilation of useful materials - codes, docs etc
