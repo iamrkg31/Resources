@@ -1,3 +1,5 @@
+// A python script to read and write to hbase table
+// Requirement : python 3
 from pyspark import SparkContext
 from pyspark import sql
 import json
