@@ -191,7 +191,7 @@ def main():
                 continue
             count = count + 1
             print(count)
-            # ignore messages with less than or equal to 5 words
+            # ignore text with less than or equal to 5 words
             if not line or len(line.split()) <= 5:
                 continue
             line = escape_html_chars(line)
