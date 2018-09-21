@@ -163,7 +163,7 @@ def filter_links(text):
 def create_slang_dict():
     """Creates slang dictionary from a text file"""
     slang_dict = {}
-    slang_dict_path = "/home/rahul/work/VOCP/KeywordExtraction/KeywordExtraction/VOCPKeywordExtraction_test/TextCleaning/slangs.txt"
+    slang_dict_path = "slangs.txt"
 
     with open(slang_dict_path) as file:
         for line in file:
@@ -179,7 +179,7 @@ def create_slang_dict():
 
 
 def main():
-    file_path_to_read = "/home/rahul/work/VOCP/sense2vec/sense2vec/topic_data.csv"
+    file_path_to_read = "input.txt"
     file_path_to_write = "out.txt"
     slang_dict = create_slang_dict()
     f = open(file_path_to_write, 'w')
