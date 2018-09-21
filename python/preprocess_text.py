@@ -142,7 +142,6 @@ def expand_contractions(text):
     words = text.split()
     modified_text = [contraction_list[word] if word in contraction_list else word for word in words]
     modified_text = " ".join(modified_text)
-
     return modified_text
 
 
@@ -151,7 +150,6 @@ def replace_slangs(text,slang_dict):
     words = text.split()
     modified_text = [slang_dict[word] if word in slang_dict else word for word in words]
     modified_text = " ".join(modified_text)
-
     return modified_text
 
 
@@ -164,7 +162,6 @@ def create_slang_dict():
     """Creates slang dictionary from a text file"""
     slang_dict = {}
     slang_dict_path = "slangs.txt"
-
     with open(slang_dict_path) as file:
         for line in file:
             if not line:
@@ -174,7 +171,6 @@ def create_slang_dict():
             key = row[0].strip()
             value = row[1].strip()
             slang_dict[key]=value
-
     return slang_dict
 
 
