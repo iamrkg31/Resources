@@ -1,16 +1,20 @@
-"""Read/Write csv using pandas"""
+"""Read/Write csv using pandas
+Uses-
+Nltk 3.2.4
+Pandas 0.20.3
+"""
 import re
 import pandas as pd
 from nltk.tokenize import sent_tokenize
 
 # Import data
-df1 = pd.read_csv("/home/rahul/train_data_13_july.csv")
+df1 = pd.read_csv("/home/rahul/sentiment_training_data.csv")
 
 def tokenize_to_sentence(text, match1, match2):
     """Tokenizes to sentences"""
     sent_list = []
     for i in sent_tokenize(text):
-        if re.search(re.sub("(\(|\))","",match1.lower()), i.lower()) and re.search(re.sub("(\(|\))","",match2.lower()), i.lower()) :
+        if re.search(match1.lower(), i.lower()) and re.search(re.sub("(\(|\))","",match2.lower()), i.lower()) :
             sent_list.append(i)
     return sent_list
 
