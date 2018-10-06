@@ -20,7 +20,7 @@ import tensorflow as tf
 sess = tf.Session()
 
 # Set RNN parameters
-epochs = 250
+epochs = 100
 batch_size = 250
 max_sequence_length = 25
 rnn_size = 15
@@ -115,15 +115,15 @@ for i, filter_size in enumerate(filter_sizes):
 # Combine all the pooled features
 num_filters_total = num_filters * len(filter_sizes)
 h_pool = tf.concat(pooled_outputs,3)
-h_pool_flat = tf.reshape(h_pool, [-1, num_filters_total])
+h_pool_flat = tf.reshape(h_pool, [-1, num_filters_total]) # -1 means "all"
 h_drop = tf.nn.dropout(h_pool_flat, dropout_keep_prob)
 
 # Create weight and bias variable
 weight = tf.Variable(tf.truncated_normal([num_filters_total, num_classes], stddev=0.1))
-bias = tf.Variable(tf.constant(0.1, shape=[2]))
+bias = tf.Variable(tf.constant(0.1, shape=[num_classes]))
 
 # Create logits
-logits_out = tf.nn.softmax(tf.matmul(h_drop, weight) + bias)
+logits_out = tf.matmul(h_drop, weight) + bias
 
 # Loss function
 losses = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits_out, labels=target)
