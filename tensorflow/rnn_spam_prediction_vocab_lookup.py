@@ -136,7 +136,7 @@ print('\nOverall accuracy on test set (%): {}'.format(np.mean(temp_test_acc)*100
 epoch_seq = np.arange(1, epochs+1)
 plt.plot(epoch_seq, train_loss, 'k--', label='Train Set')
 plt.plot(epoch_seq, test_loss, 'r-', label='Test Set')
-plt.title('RNN training/test loss')
+plt.title('training/test loss')
 plt.xlabel('Epochs')
 plt.ylabel('Loss')
 plt.legend(loc='upper left')
