@@ -1,35 +1,32 @@
-"""Implementing an CNN in Tensorflow to predict spam/ham from texts using word2vec embedding
+"""Implementing word2vec embedding using character embedding
 References-
-http://www.wildml.com/2015/12/implementing-a-cnn-for-text-classification-in-tensorflow/#more-452
+https://guillaumegenthial.github.io/sequence-tagging-with-tensorflow.html
 Uses -
 python 3.6.3
 tensorflow 1.10.0
 numpy 1.14.5
 pandas 0.20.3
-matplotlib 2.1.0
-gensim 3.3.0
 """
 import re
-import gensim
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import tensorflow as tf
 
 # Start a graph
 sess = tf.Session()
 
-# Set RNN parameters
-epochs = 100
-batch_size = 250
+# Set seed for numpy and tensorflow
+# set for reproducible results
+seed = 5
+np.random.seed(seed)
+tf.set_random_seed(seed)
+
+# Parameters
 max_word_length = 12
-rnn_size = 15
 embedding_size = 50
-min_word_frequency = 10
-learning_rate = 0.0001
-filter_sizes = [3,4,5]
-num_filters = 128
-num_classes = 2
+cell_size = 50 # dimentionality of hidden state/output
+batch_size = 150
+n_epochs = 100
 
 # Import data
 data = pd.read_csv("data/spam.txt", delimiter="\t")
@@ -60,7 +57,7 @@ def get_word_embeddings(words, _max_word_length, chars_dict):
                 word_ids[id] = chars_dict[c]
         yield word_ids
 
-# Transform data
+# Get all words and chars
 chars = get_all_chars(data["Mail"].tolist())
 words = get_all_words(data["Mail"].tolist())
 
@@ -68,39 +65,40 @@ chars_dict = dict()
 for id, c in enumerate(chars):
     chars_dict[c] = id
 
+# Input
 X = np.array(list(get_word_embeddings(words, max_word_length, chars_dict)))
-
 input = tf.placeholder(tf.int32, [None, max_word_length])
 
 # Create embedding
 embedding_mat =  tf.get_variable(name="embedding_mat",dtype=tf.float32, shape=[len(chars), embedding_size])
-embedding_output = tf.nn.embedding_lookup(embedding_mat, input)
+embedding_output = tf.nn.embedding_lookup(embedding_mat, input) # shape = (batch, max_word_length, embedding_size)
 
-# 3. bi lstm on chars
-cell_fw = tf.contrib.rnn.LSTMCell(25, state_is_tuple=True)
-cell_bw = tf.contrib.rnn.LSTMCell(25, state_is_tuple=True)
+# Bi lstm
+cell_fw = tf.contrib.rnn.LSTMCell(cell_size, state_is_tuple=True)
+cell_bw = tf.contrib.rnn.LSTMCell(cell_size, state_is_tuple=True)
+_, ((_, output_fw), (_, output_bw)) = tf.nn.bidirectional_dynamic_rnn(cell_fw, cell_bw,
+                                                                      embedding_output,
+                                                                      dtype=tf.float32)
 
-_, ((_, output_fw), (_, output_bw)) = tf.nn.bidirectional_dynamic_rnn(cell_fw,
-    cell_bw, embedding_output, dtype=tf.float32)
-
-# shape = (batch x sentence, 2 x char_hidden_size)
+# shape = (batch, 2 x cell_size)
 output = tf.concat([output_fw, output_bw], axis=-1)
 
 # Initialize variables
 init_op = tf.global_variables_initializer()
 sess.run(init_op)
 
-# Start training
-for epoch in range(epochs):
+# Get word embedding
+word_embedding = np.zeros(shape=(len(words),2*cell_size))
+for epoch in range(n_epochs):
     num_batches = int(len(X) / batch_size) + 1
-
+    print("itr: ",epoch)
     for i in range(num_batches):
-        # Select train data
         batch_index = np.random.choice(len(X), size=batch_size)
         batch_train_X = X[batch_index]
-
         train_dict = {input: batch_train_X}
-        new_out = sess.run(output, feed_dict=train_dict)
+        word_embedding[batch_index] = sess.run(output, feed_dict=train_dict)
 
-        print(new_out.shape)
-        print(new_out)
+# Write word embedding to file
+final_embeddings = pd.DataFrame(word_embedding,dtype=str)
+final_embeddings.insert(loc=0, column="words", value=words)
+final_embeddings.to_csv("data/out.csv", sep=" ", index=False, header=False)

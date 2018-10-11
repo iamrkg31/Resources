@@ -8,7 +8,8 @@ import pandas as pd
 from nltk.tokenize import sent_tokenize
 
 # Import data
-df1 = pd.read_csv("/home/rahul/Downloads/train_data_7_oct.csv")
+df1 = pd.read_csv("in1.csv")
+validset = pd.read_csv("in2.txt")["Phrases"].tolist()
 
 # def tokenize_to_sentence(text, match1, match2):
 #     """Tokenizes to sentences"""
@@ -26,12 +27,14 @@ df1 = pd.read_csv("/home/rahul/Downloads/train_data_7_oct.csv")
 # df1 = df1[df1["Sentence"].notnull()]
 
 
-def annotate_one_column_value_on_another(text, match):
-    """annotate"""
-    return re.sub(match,"<"+match+">",text)
+# def annotate_one_column_value_on_another(text, match):
+#     """annotate"""
+#     return re.sub(match,"<"+match+">",text)
+#
+# df1["Message"] = df1.apply(lambda x:annotate_one_column_value_on_another(x[0], x[3]), axis=1)
+# df2 = df1["Message"]
 
-df1["Message"] = df1.apply(lambda x:annotate_one_column_value_on_another(x[0], x[3]), axis=1)
-df2 = df1["Message"]
+df2 = df1[df1.phrase.isin(validset)]
 
 # Write to file
-df2.to_csv("out.csv", sep="\t")
+df2.to_csv("out.csv", sep=",")
