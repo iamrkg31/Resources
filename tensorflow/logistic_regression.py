@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 
 # import the data
-data = pd.read_csv("data/iris.csv")
+data = pd.read_csv("../data/iris/iris.csv")
 data = data[:100] # consider only 2 classes ie, upto 100 rows
 data.Species = data.Species.replace(to_replace=['Iris-setosa', 'Iris-versicolor'], value=[0, 1])
 X = data.drop(labels=["Id", "Species"], axis=1).values

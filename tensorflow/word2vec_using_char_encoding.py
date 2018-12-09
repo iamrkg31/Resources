@@ -29,7 +29,7 @@ batch_size = 150
 n_epochs = 100
 
 # Import data
-data = pd.read_csv("data/spam.txt", delimiter="\t")
+data = pd.read_csv("../data/spam/spam.txt", delimiter="\t")
 
 # Get all characters
 def get_all_chars(texts):
@@ -101,4 +101,4 @@ for epoch in range(n_epochs):
 # Write word embedding to file
 final_embeddings = pd.DataFrame(word_embedding,dtype=str)
 final_embeddings.insert(loc=0, column="words", value=words)
-final_embeddings.to_csv("data/out.csv", sep=" ", index=False, header=False)
+final_embeddings.to_csv("../data/out.csv", sep=" ", index=False, header=False)

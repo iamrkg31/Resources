@@ -27,7 +27,7 @@ learning_rate = 0.1
 dropout_keep_prob = tf.placeholder(tf.float32)
 
 # import the data
-mnist = input_data.read_data_sets("data/MNIST", one_hot=True)
+mnist = input_data.read_data_sets("../data/MNIST", one_hot=True)
 
 # Hidden layer with ReLU activation
 def layer(x, W, b):

@@ -28,7 +28,7 @@ learning_rate = 0.0001
 dropout_keep_prob = tf.placeholder(tf.float32)
 
 # Import data
-data = pd.read_csv("data/spam.txt", delimiter="\t")
+data = pd.read_csv("../data/spam/spam.txt", delimiter="\t")
 
 # Clean text
 def clean_text(text_string):

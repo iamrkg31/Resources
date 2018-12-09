@@ -1,5 +1,5 @@
-// A python script to read and write to hbase table
-// Requirement : python 3
+# A python script to read and write to hbase table
+# Requirement : python 3
 from pyspark import SparkContext
 from pyspark import sql
 import json
@@ -39,9 +39,9 @@ def save_rdd_to_hbase(host, tablename, rdd):
                                 str(json.loads(row)["qualifier"]), str(json.loads(row)["value"])]))
     rdd.saveAsNewAPIHadoopDataset(conf=conf, keyConverter=keyConv, valueConverter=valueConv)
 
-host = "xxx.xxx.xxx.xxx" //or "xxx.xxx.xxx.xxx:xxxx"
+host = "xxx.xxx.xxx.xxx" #or "xxx.xxx.xxx.xxx:xxxx"
 inputTable = "input"
-outTable = "output" //make sure output table exists with same schema/columnfamily
+outTable = "output" #make sure output table exists with same schema/columnfamily
 myrdd = get_hbase_as_rdd(host, inputTable)
 myrdd = myrdd.flatMap(lambda row : row[1].split('\n'))
 myrdd = myrdd.filter(lambda row : str(json.loads(row)["qualifier"])=="message")
